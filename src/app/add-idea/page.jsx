@@ -28,7 +28,6 @@ const AddIdea = () => {
         body: JSON.stringify(idea)
     })
     const data = await res.json()
-    console.log(data);
   };
   return (
     <section className="py-12 px-4">
