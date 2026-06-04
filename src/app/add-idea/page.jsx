@@ -13,16 +13,22 @@ import {
 } from "@heroui/react";
 
 const AddIdea = () => {
-  const onSubmit = (e) => {
+  const onSubmit = async(e) => {
     e.preventDefault();
 
     const formData = new FormData(e.currentTarget);
 
     const idea = Object.fromEntries(formData.entries());
 
-    console.log(idea);
-
-    // TODO: Send to database
+    const res = await fetch('http://localhost:5000/idea', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        }, 
+        body: JSON.stringify(idea)
+    })
+    const data = await res.json()
+    console.log(data);
   };
   return (
     <section className="py-12 px-4">
