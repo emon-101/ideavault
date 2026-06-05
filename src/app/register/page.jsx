@@ -13,9 +13,11 @@ import {
 import { FcGoogle } from "react-icons/fc";
 import { toast } from "sonner";
 import { authClient } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
 
 const RegisterPage = () => {
   const [passwordError, setPasswordError] = useState("");
+  const router = useRouter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -59,13 +61,13 @@ const RegisterPage = () => {
         password: userData.password,
         image: userData.photoURL,
       });
-      console.log({ data, error });
-
-      // Success
-      toast.success("Account created successfully");
+    //   console.log({ data, error });
 
       // Redirect
-      // router.push("/");
+      if(data) {
+        router.push("/");
+        toast.success("Account created successfully");
+      }
     } catch (error) {
       console.error(error);
 

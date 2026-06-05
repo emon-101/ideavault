@@ -11,8 +11,11 @@ import {
 } from "@heroui/react";
 import { FcGoogle } from "react-icons/fc";
 import { toast } from "sonner";
+import { authClient } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
 
 const LoginPage = () => {
+  const router = useRouter();
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -22,15 +25,14 @@ const LoginPage = () => {
     const password = formData.get("password");
 
     try {
-      console.log({ email, password });
-
-      // Better Auth Login Here
-
-      // Success
-      toast.success("Login successful");
-
-      // Redirect
-      // router.push("/ideas");
+      const { data, error } = await authClient.signIn.email({
+        email: email,
+        password: password,
+      });
+      if (data) {
+        toast.success("Login successful");
+        router.push("/");
+      }
     } catch (error) {
       console.error(error);
 
