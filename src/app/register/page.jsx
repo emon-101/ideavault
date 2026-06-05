@@ -61,10 +61,10 @@ const RegisterPage = () => {
         password: userData.password,
         image: userData.photoURL,
       });
-    //   console.log({ data, error });
+      //   console.log({ data, error });
 
       // Redirect
-      if(data) {
+      if (data) {
         router.push("/");
         toast.success("Account created successfully");
       }
@@ -77,11 +77,14 @@ const RegisterPage = () => {
 
   const handleGoogleRegister = async () => {
     try {
-      console.log("Google Signup");
-
-      // Better Auth Google Signup
+      await authClient.signIn.social({
+        provider: "google",
+      });
+      toast.success("Login successful");
+      router.push("/");
     } catch (error) {
       console.error(error);
+      toast.error("Login failed");
     }
   };
 

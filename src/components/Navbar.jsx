@@ -142,7 +142,9 @@ const Navbar = () => {
                     </div>
                     <Dropdown.Menu>
                       <Dropdown.Item id="profile" textValue="Profile">
-                        <Label>Profile</Label>
+                        <Link href={"/my-profile"} className="font-semibold">
+                          Profile
+                        </Link>
                       </Dropdown.Item>
                       <Dropdown.Item
                         id="logout"
@@ -254,7 +256,12 @@ const Navbar = () => {
                         </div>
                         <Dropdown.Menu>
                           <Dropdown.Item id="profile" textValue="Profile">
-                            <Label>Profile</Label>
+                            <Link
+                              href={"/my-profile"}
+                              className="font-semibold"
+                            >
+                              Profile
+                            </Link>
                           </Dropdown.Item>
                           <Dropdown.Item
                             id="logout"

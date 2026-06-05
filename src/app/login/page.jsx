@@ -33,11 +33,24 @@ const LoginPage = () => {
         toast.success("Login successful");
         router.push("/");
       }
-      if(error) {
+      if (error) {
         toast.error("Login failed");
       }
     } catch (error) {
       console.error(error);
+    }
+  };
+
+  const handleGoogleRegister = async () => {
+    try {
+      await authClient.signIn.social({
+        provider: "google",
+      });
+      toast.success("Login successful");
+      router.push("/");
+    } catch (error) {
+      console.error(error);
+      toast.error("Login failed");
     }
   };
 
@@ -104,7 +117,7 @@ const LoginPage = () => {
           </div>
 
           {/* Google Login */}
-          <Button variant="outline" className="w-full">
+          <Button onClick={handleGoogleRegister} variant="outline" className="w-full">
             <FcGoogle size={22} />
             Continue with Google
           </Button>
