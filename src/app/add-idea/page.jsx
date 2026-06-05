@@ -11,23 +11,39 @@ import {
   ListBox,
   Select,
 } from "@heroui/react";
+import { toast } from "sonner";
 
 const AddIdea = () => {
-  const onSubmit = async(e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
 
     const formData = new FormData(e.currentTarget);
 
     const idea = Object.fromEntries(formData.entries());
 
-    const res = await fetch('http://localhost:5000/idea', {
-        method: 'POST',
+    try {
+      const res = await fetch("http://localhost:5000/idea", {
+        method: "POST",
         headers: {
-            'Content-Type': 'application/json'
-        }, 
-        body: JSON.stringify(idea)
-    })
-    const data = await res.json()
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(idea),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        toast.success("Idea added successfully!");
+        e.target.reset();
+
+        console.log(data);
+      } else {
+        toast.error("Failed to add idea");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Something went wrong");
+    }
   };
   return (
     <section className="py-12 px-4">
