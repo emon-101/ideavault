@@ -9,6 +9,9 @@ const nextConfig = {
         hostname: '**'
       }
     ]
+  },
+  experimental: {
+    serverComponentsExternalPackages:['@better-auth/kysely-adapter'],
   }
 };
 

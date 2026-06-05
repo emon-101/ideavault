@@ -12,6 +12,7 @@ import {
 } from "@heroui/react";
 import { FcGoogle } from "react-icons/fc";
 import { toast } from "sonner";
+import { authClient } from "@/lib/auth-client";
 
 const RegisterPage = () => {
   const [passwordError, setPasswordError] = useState("");
@@ -52,6 +53,13 @@ const RegisterPage = () => {
       console.log(userData);
 
       // Better Auth Registration
+      const { data, error } = await authClient.signUp.email({
+        name: userData.name,
+        email: userData.email,
+        password: userData.password,
+        image: userData.photoURL,
+      });
+      console.log({ data, error });
 
       // Success
       toast.success("Account created successfully");
