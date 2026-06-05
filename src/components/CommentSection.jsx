@@ -1,141 +1,271 @@
 "use client";
 
-import { useState } from "react";
-import { Pencil, Trash2 } from "lucide-react";
+import { useEffect, useState } from "react";
+import Image from "next/image";
+import { Pencil, Trash2, Send } from "lucide-react";
+import { authClient } from "@/lib/auth-client";
 
 const CommentSection = ({ ideaId }) => {
+  const { data: session } = authClient.useSession();
+  const user = session?.user;
+
   const [comments, setComments] = useState([]);
+  const [commentText, setCommentText] = useState("");
+  const [editingId, setEditingId] = useState(null);
 
-  const [commentText, setCommentText] =
-    useState("");
+  // Load comments
+  const loadComments = async () => {
+    try {
+      const res = await fetch(
+        `http://localhost:5000/comments/${ideaId}`
+      );
 
-  const [editingId, setEditingId] =
-    useState(null);
+      const data = await res.json();
 
-  const handleAddComment = () => {
-    if (!commentText.trim()) return;
-
-    const newComment = {
-      id: Date.now(),
-      userName: "Emon",
-      comment: commentText,
-      createdAt: new Date(),
-    };
-
-    setComments([newComment, ...comments]);
-    setCommentText("");
+      setComments(Array.isArray(data) ? data : []);
+    } catch (error) {
+      console.error("Failed to load comments:", error);
+    }
   };
 
-  const handleDelete = (id) => {
-    setComments(
-      comments.filter(
-        (comment) => comment.id !== id
-      )
-    );
+  useEffect(() => {
+    if (ideaId) {
+      loadComments();
+    }
+  }, [ideaId]);
+
+  // Add Comment
+  const handleAddComment = async () => {
+    if (!commentText.trim() || !user) return;
+
+    try {
+      const commentData = {
+        ideaId,
+        userId: user.id,
+        userName: user.name,
+        userImage: user.image,
+        comment: commentText,
+      };
+
+      const res = await fetch(
+        "http://localhost:5000/comments",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(commentData),
+        }
+      );
+
+      const data = await res.json();
+
+      if (data.insertedId) {
+        setCommentText("");
+        await loadComments();
+      }
+    } catch (error) {
+      console.error("Failed to add comment:", error);
+    }
   };
 
-  const handleEdit = (id, text) => {
-    setEditingId(id);
+  // Delete Comment
+  const handleDelete = async (commentId) => {
+    try {
+      await fetch(
+        `http://localhost:5000/comments/${commentId}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      await loadComments();
+    } catch (error) {
+      console.error("Failed to delete comment:", error);
+    }
+  };
+
+  // Start Editing
+  const handleEdit = (commentId, text) => {
+    setEditingId(commentId);
     setCommentText(text);
   };
 
-  const handleUpdate = () => {
-    setComments(
-      comments.map((comment) =>
-        comment.id === editingId
-          ? {
-              ...comment,
-              comment: commentText,
-            }
-          : comment
-      )
-    );
+  // Update Comment
+  const handleUpdate = async () => {
+    if (!commentText.trim()) return;
 
-    setEditingId(null);
-    setCommentText("");
+    try {
+      await fetch(
+        `http://localhost:5000/comments/${editingId}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            comment: commentText,
+          }),
+        }
+      );
+
+      setEditingId(null);
+      setCommentText("");
+
+      await loadComments();
+    } catch (error) {
+      console.error("Failed to update comment:", error);
+    }
   };
 
   return (
-    <div className="mt-12">
-      <h2 className="text-3xl font-bold mb-6">
-        Discussion
+    <section className="mt-12">
+      <h2 className="mb-6 text-3xl font-bold">
+        Community Discussion
       </h2>
 
-      {/* Add Comment */}
-      <div className="rounded-3xl border p-6">
-        <textarea
-          value={commentText}
-          onChange={(e) =>
-            setCommentText(e.target.value)
-          }
-          rows={4}
-          placeholder="Share your thoughts..."
-          className="w-full rounded-2xl border p-4"
-        />
+      {/* Comment Form */}
+      <div className="rounded-3xl border border-cyan-500/20 bg-white p-6 shadow-sm dark:bg-slate-900">
+        {user ? (
+          <>
+            <div className="mb-4 flex items-center gap-3">
+              {user.image ? (
+                <Image
+                  src={user.image}
+                  alt={user.name || "User"}
+                  width={40}
+                  height={40}
+                  className="rounded-full object-cover"
+                />
+              ) : (
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-cyan-500 font-bold text-white">
+                  {user.name?.charAt(0)}
+                </div>
+              )}
 
-        <button
-          onClick={
-            editingId
-              ? handleUpdate
-              : handleAddComment
-          }
-          className="mt-4 rounded-xl bg-cyan-500 px-6 py-3 text-white"
-        >
-          {editingId
-            ? "Update Comment"
-            : "Add Comment"}
-        </button>
-      </div>
-
-      {/* Comments List */}
-      <div className="space-y-4 mt-6">
-        {comments.map((comment) => (
-          <div
-            key={comment.id}
-            className="rounded-3xl border p-6"
-          >
-            <div className="flex items-center justify-between">
               <div>
-                <h4 className="font-semibold">
-                  {comment.userName}
-                </h4>
-
-                <p className="text-sm text-gray-500">
-                  {new Date(
-                    comment.createdAt
-                  ).toLocaleString()}
+                <p className="font-semibold">
+                  {user.name}
                 </p>
-              </div>
 
-              <div className="flex gap-3">
-                <button
-                  onClick={() =>
-                    handleEdit(
-                      comment.id,
-                      comment.comment
-                    )
-                  }
-                >
-                  <Pencil size={18} />
-                </button>
-
-                <button
-                  onClick={() =>
-                    handleDelete(comment.id)
-                  }
-                >
-                  <Trash2 size={18} />
-                </button>
+                <p className="text-xs text-default-500">
+                  Share your thoughts on this idea
+                </p>
               </div>
             </div>
 
-            <p className="mt-4">
-              {comment.comment}
+            <textarea
+              rows={4}
+              value={commentText}
+              onChange={(e) =>
+                setCommentText(e.target.value)
+              }
+              placeholder="What do you think about this innovation?"
+              className="w-full rounded-2xl border p-4 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+            />
+
+            <button
+              onClick={
+                editingId
+                  ? handleUpdate
+                  : handleAddComment
+              }
+              className="mt-4 flex items-center gap-2 rounded-xl bg-cyan-500 px-5 py-3 text-white transition hover:bg-cyan-600"
+            >
+              <Send size={18} />
+
+              {editingId
+                ? "Update Comment"
+                : "Post Comment"}
+            </button>
+          </>
+        ) : (
+          <div className="py-6 text-center">
+            <p className="text-default-500">
+              Login to participate in discussions.
             </p>
           </div>
-        ))}
+        )}
       </div>
-    </div>
+
+      {/* Comment List */}
+      <div className="mt-8 space-y-5">
+        {comments.length === 0 ? (
+          <div className="rounded-2xl border p-6 text-center text-default-500">
+            No comments yet. Be the first to share your
+            thoughts 🚀
+          </div>
+        ) : (
+          comments.map((comment) => (
+            <div
+              key={comment._id}
+              className="rounded-3xl border bg-white p-6 shadow-sm dark:bg-slate-900"
+            >
+              <div className="flex items-start justify-between">
+                <div className="flex gap-3">
+                  {comment.userImage ? (
+                    <Image
+                      src={comment.userImage}
+                      alt={comment.userName || "User"}
+                      width={48}
+                      height={48}
+                      className="rounded-full object-cover"
+                    />
+                  ) : (
+                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-cyan-500 font-bold text-white">
+                      {comment.userName?.charAt(0)}
+                    </div>
+                  )}
+
+                  <div>
+                    <h4 className="font-semibold">
+                      {comment.userName}
+                    </h4>
+
+                    <p className="text-xs text-default-500">
+                      {comment.createdAt
+                        ? new Date(
+                            comment.createdAt
+                          ).toLocaleString()
+                        : "Just now"}
+                    </p>
+                  </div>
+                </div>
+
+                {user?.id === comment.userId && (
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() =>
+                        handleEdit(
+                          comment._id,
+                          comment.comment
+                        )
+                      }
+                      className="rounded-lg p-2 hover:bg-default-100"
+                    >
+                      <Pencil size={18} />
+                    </button>
+
+                    <button
+                      onClick={() =>
+                        handleDelete(comment._id)
+                      }
+                      className="rounded-lg p-2 text-red-500 hover:bg-red-50"
+                    >
+                      <Trash2 size={18} />
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              <p className="mt-4 leading-relaxed">
+                {comment.comment}
+              </p>
+            </div>
+          ))
+        )}
+      </div>
+    </section>
   );
 };
 
