@@ -10,6 +10,7 @@ import {
   TextField,
 } from "@heroui/react";
 import { FcGoogle } from "react-icons/fc";
+import { toast } from "sonner";
 
 const LoginPage = () => {
   const handleSubmit = async (e) => {
@@ -26,36 +27,30 @@ const LoginPage = () => {
       // Better Auth Login Here
 
       // Success
-      // toast.success("Login successful");
+      toast.success("Login successful");
 
       // Redirect
       // router.push("/ideas");
     } catch (error) {
       console.error(error);
 
-      // toast.error("Login failed");
+      toast.error("Login failed");
     }
   };
 
   return (
     <div className="px-4 py-16">
-      <Card className="max-w-xl mx-auto">
+      <Card className="max-w-xl mx-auto border border-default-200 shadow-xl">
         <div className="p-8">
           {/* Heading */}
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold">
-              Welcome Back
-            </h1>
-
+            <h1 className="text-3xl font-bold">Welcome Back</h1>
             <p className="text-default-500 mt-2">
               Login to your IdeaVault account
             </p>
           </div>
 
-          <form
-            onSubmit={handleSubmit}
-            className="space-y-6"
-          >
+          <form onSubmit={handleSubmit} className="space-y-6">
             {/* Email */}
             <TextField name="email" isRequired>
               <Label>Email Address</Label>
@@ -93,10 +88,7 @@ const LoginPage = () => {
             </div>
 
             {/* Login Button */}
-            <Button
-              type="submit"
-              className="w-full bg-cyan-500 text-white"
-            >
+            <Button type="submit" className="w-full bg-cyan-500 text-white">
               Login
             </Button>
           </form>
@@ -104,17 +96,12 @@ const LoginPage = () => {
           {/* Divider */}
           <div className="flex items-center gap-3 my-6">
             <div className="flex-1 border-t" />
-            <span className="text-sm text-default-500">
-              OR
-            </span>
+            <span className="text-sm text-default-500">OR</span>
             <div className="flex-1 border-t" />
           </div>
 
           {/* Google Login */}
-          <Button
-            variant="outline"
-            className="w-full"
-          >
+          <Button variant="outline" className="w-full">
             <FcGoogle size={22} />
             Continue with Google
           </Button>
