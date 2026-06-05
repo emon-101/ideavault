@@ -1,5 +1,6 @@
 "use client";
 
+import { authClient } from "@/lib/auth-client";
 import {
   Button,
   Input,
@@ -14,12 +15,28 @@ import {
 import { toast } from "sonner";
 
 const AddIdea = () => {
+  const { data: session } = authClient.useSession();
+  const user = session?.user;
   const onSubmit = async (e) => {
     e.preventDefault();
 
+    if (!user) {
+      toast.error("Please login first");
+      return;
+    }
+
     const formData = new FormData(e.currentTarget);
 
-    const idea = Object.fromEntries(formData.entries());
+    const idea = {
+      ...Object.fromEntries(formData.entries()),
+
+      userId: user?.id,
+      userName: user?.name,
+      userEmail: user?.email,
+      userImage: user?.image,
+
+      createdAt: new Date(),
+    };
 
     try {
       const res = await fetch("http://localhost:5000/idea", {
