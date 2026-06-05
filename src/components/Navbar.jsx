@@ -5,22 +5,45 @@ import { useState } from "react";
 import { useTheme } from "next-themes";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
-import { Menu, X, Moon, Sun, Lightbulb, User } from "lucide-react";
+import { Menu, X, Moon, Sun, Lightbulb, User, LogOut } from "lucide-react";
+import { authClient } from "@/lib/auth-client";
+import { Dropdown, Avatar, Label } from "@heroui/react";
+
+import { toast } from "sonner";
+import { ArrowRightFromSquare, Gear, Persons } from "@gravity-ui/icons";
+import Image from "next/image";
 
 const Navbar = () => {
   const pathname = usePathname();
   const { theme, setTheme } = useTheme();
 
   const [open, setOpen] = useState(false);
-  
-  const user = null;
+
+  const { data: session } = authClient.useSession();
+  const user = session?.user;
+
+  const handleLogout = async () => {
+    const { error } = await authClient.signOut();
+
+    if (error) {
+      toast.error("Logout failed");
+      return;
+    }
+
+    toast.success("Logged out successfully");
+  };
 
   const links = [
     { name: "Home", href: "/" },
     { name: "Ideas", href: "/ideas" },
-    { name: "Add Idea", href: "/add-idea" },
-    { name: "My Ideas", href: "/my-ideas" },
-    { name: "My Interactions", href: "/my-interactions" },
+
+    ...(user
+      ? [
+          { name: "Add Idea", href: "/add-idea" },
+          { name: "My Ideas", href: "/my-ideas" },
+          { name: "My Interactions", href: "/my-interactions" },
+        ]
+      : []),
   ];
   return (
     <header className="sticky top-4 z-50 px-4">
@@ -33,7 +56,7 @@ const Navbar = () => {
               className="flex items-center gap-2 font-bold text-xl"
             >
               <Lightbulb className="h-6 w-6 text-cyan-500" />
-              <span className="bg-gradient-to-r from-cyan-500 to-blue-600 bg-clip-text text-transparent">
+              <span className="bg-linear-to-r from-cyan-500 to-blue-600 bg-clip-text text-transparent">
                 IdeaVault
               </span>
             </Link>
@@ -87,16 +110,58 @@ const Navbar = () => {
 
                   <Link
                     href="/register"
-                    className="rounded-xl px-4 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white hover:opacity-90 transition"
+                    className="rounded-xl px-4 py-2 bg-linear-to-r from-cyan-500 to-blue-600 text-white hover:opacity-90 transition"
                   >
                     Register
                   </Link>
                 </>
               ) : (
-                <button className="flex items-center gap-2 rounded-xl border px-3 py-2">
-                  <User size={18} />
-                  Profile
-                </button>
+                <Dropdown>
+                  <Dropdown.Trigger className="rounded-full">
+                    <Avatar>
+                      <Avatar.Image alt={user?.name} src={user?.image} />
+                      <Avatar.Fallback delayMs={600}>EH</Avatar.Fallback>
+                    </Avatar>
+                  </Dropdown.Trigger>
+                  <Dropdown.Popover>
+                    <div className="px-3 pt-3 pb-1">
+                      <div className="flex items-center gap-2">
+                        <Avatar size="sm">
+                          <Avatar.Image alt={user?.name} src={user.image} />
+                          <Avatar.Fallback delayMs={600}>JD</Avatar.Fallback>
+                        </Avatar>
+                        <div className="flex flex-col gap-0">
+                          <p className="text-sm leading-5 font-medium">
+                            {user.name}
+                          </p>
+                          <p className="text-xs leading-none text-muted">
+                            {user?.email}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    <Dropdown.Menu>
+                      <Dropdown.Item id="profile" textValue="Profile">
+                        <Label>Profile</Label>
+                      </Dropdown.Item>
+                      <Dropdown.Item
+                        id="logout"
+                        textValue="Logout"
+                        variant="danger"
+                      >
+                        <div className="flex w-full items-center justify-between gap-2">
+                          <button
+                            className="font-semibold"
+                            onClick={handleLogout}
+                          >
+                            Log Out
+                          </button>
+                          <ArrowRightFromSquare className="size-3.5 text-danger" />
+                        </div>
+                      </Dropdown.Item>
+                    </Dropdown.Menu>
+                  </Dropdown.Popover>
+                </Dropdown>
               )}
             </div>
 
@@ -155,18 +220,67 @@ const Navbar = () => {
 
                       <Link
                         href="/register"
-                        className="flex-1 text-center rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 py-2 text-white"
+                        className="flex-1 text-center rounded-xl bg-linear-to-r from-cyan-500 to-blue-600 py-2 text-white"
                       >
                         Register
                       </Link>
                     </>
                   ) : (
-                    <Link
-                      href="/profile"
-                      className="flex-1 text-center rounded-xl border py-2"
-                    >
-                      Profile
-                    </Link>
+                    <div className="mt-4 rounded-2xl border border-cyan-500/20 bg-linear-to-br from-cyan-500/5 to-blue-500/5 p-4">
+                      {/* User Info */}
+                      <div className="flex items-center gap-3">
+                        {user?.image ? (
+                          <Image
+                            src={user.image}
+                            alt={user.name || "User"}
+                            width={48}
+                            height={48}
+                            className="h-12 w-12 rounded-full object-cover border-2 border-cyan-500"
+                          />
+                        ) : (
+                          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-linear-to-r from-cyan-500 to-blue-600 text-white font-bold">
+                            {user?.name?.charAt(0)?.toUpperCase() || "U"}
+                          </div>
+                        )}
+
+                        <div className="min-w-0">
+                          <h3 className="font-semibold text-sm truncate">
+                            {user?.name}
+                          </h3>
+
+                          <p className="text-xs text-default-500 truncate">
+                            {user?.email}
+                          </p>
+
+                          <p className="text-[11px] text-cyan-500 font-medium mt-1">
+                            🚀 Idea Creator
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Divider */}
+                      <div className="my-4 border-t border-default-200 dark:border-default-100/10" />
+
+                      {/* Actions */}
+                      <div className="space-y-2">
+                        <Link
+                          href="/profile"
+                          onClick={() => setOpen(false)}
+                          className="flex items-center gap-3 rounded-xl px-4 py-3 border hover:bg-cyan-500/10 transition"
+                        >
+                          <User size={18} />
+                          <span>My Profile</span>
+                        </Link>
+
+                        <button
+                          onClick={handleLogout}
+                          className="flex w-full items-center gap-3 rounded-xl px-4 py-3 bg-red-500/10 text-red-500 hover:bg-red-500/20 transition"
+                        >
+                          <LogOut size={18} />
+                          <span>Logout</span>
+                        </button>
+                      </div>
+                    </div>
                   )}
                 </div>
               </div>

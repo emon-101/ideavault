@@ -33,10 +33,11 @@ const LoginPage = () => {
         toast.success("Login successful");
         router.push("/");
       }
+      if(error) {
+        toast.error("Login failed");
+      }
     } catch (error) {
       console.error(error);
-
-      toast.error("Login failed");
     }
   };
 
