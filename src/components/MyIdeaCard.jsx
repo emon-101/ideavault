@@ -3,6 +3,7 @@
 import Image from "next/image";
 import EditIdeaModal from "./EditIdeaModal";
 import DeleteIdeaModal from "./DeleteIdeaModal";
+import Link from "next/link";
 
 const MyIdeaCard = ({ idea, refetch }) => {
   return (
@@ -25,9 +26,7 @@ const MyIdeaCard = ({ idea, refetch }) => {
 
       {/* Content */}
       <div className="p-6">
-        <h2 className="line-clamp-1 text-xl font-bold">
-          {idea.ideaTitle}
-        </h2>
+        <h2 className="line-clamp-1 text-xl font-bold">{idea.ideaTitle}</h2>
 
         <p className="mt-3 line-clamp-3 text-sm text-default-500">
           {idea.shortDescription}
@@ -36,9 +35,7 @@ const MyIdeaCard = ({ idea, refetch }) => {
         {/* Extra Info */}
         <div className="mt-5 space-y-2 text-sm">
           <div className="flex justify-between">
-            <span className="font-medium">
-              Budget
-            </span>
+            <span className="font-medium">Budget</span>
 
             <span className="text-default-500">
               {idea.estimatedBudget
@@ -48,11 +45,9 @@ const MyIdeaCard = ({ idea, refetch }) => {
           </div>
 
           <div className="flex justify-between">
-            <span className="font-medium">
-              Audience
-            </span>
+            <span className="font-medium">Audience</span>
 
-            <span className="text-default-500 line-clamp-1 max-w-[150px]">
+            <span className="text-default-500 line-clamp-1 max-w-37.5">
               {idea.targetAudience}
             </span>
           </div>
@@ -75,17 +70,19 @@ const MyIdeaCard = ({ idea, refetch }) => {
           </div>
         )}
 
-        {/* Actions */}
-        <div className="mt-6 flex gap-3">
-          <EditIdeaModal
-            idea={idea}
-            refetch={refetch}
-          />
+        {/* Button */}
+        <Link
+          href={`/ideas/${idea._id}`}
+          className="block mt-5 w-full rounded-xl bg-linear-to-r from-cyan-500 to-blue-600 py-3 text-center font-medium text-white hover:opacity-90 transition"
+        >
+          View Details
+        </Link>
 
-          <DeleteIdeaModal
-            id={idea._id}
-            refetch={refetch}
-          />
+        {/* Actions */}
+        <div className="mt-6 flex gap-3 justify-end">
+          <EditIdeaModal idea={idea} refetch={refetch} />
+
+          <DeleteIdeaModal id={idea._id} refetch={refetch} />
         </div>
       </div>
     </div>
