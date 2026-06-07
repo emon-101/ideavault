@@ -41,7 +41,7 @@ const MyInteractionsContent = () => {
 
   if (comments.length === 0) {
     return (
-      <div className="rounded-3xl border border-dashed py-16 text-center">
+      <div className="rounded-3xl border border-dashed py-16 px-8 text-center">
         <h3 className="text-2xl font-bold">No Interactions Yet</h3>
 
         <p className="text-default-500 mt-2">
