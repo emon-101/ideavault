@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { useTheme } from "next-themes";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X, Moon, Sun, Lightbulb, User, LogOut } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
@@ -16,6 +16,7 @@ import Image from "next/image";
 const Navbar = () => {
   const pathname = usePathname();
   const { theme, setTheme } = useTheme();
+  const router = useRouter();
 
   const [open, setOpen] = useState(false);
 
@@ -31,6 +32,7 @@ const Navbar = () => {
     }
 
     toast.success("Logged out successfully");
+    router.push('/login');
   };
 
   const links = [
