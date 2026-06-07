@@ -241,7 +241,7 @@ const Navbar = () => {
                             <Avatar size="sm">
                               <Avatar.Image alt={user?.name} src={user.image} />
                               <Avatar.Fallback delayMs={600}>
-                                JD
+                                EH
                               </Avatar.Fallback>
                             </Avatar>
                             <div className="flex flex-col gap-0">
