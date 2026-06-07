@@ -11,6 +11,11 @@ import CommentSection from "@/components/CommentSection";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 
+export const metadata = {
+  title: "IdeaVault | Details",
+  description: "Developed By Emon Hossain",
+};
+
 const IdeaDetailsPage = async ({ params }) => {
   const { id } = await params;
   const {token} = await auth.api.getToken({

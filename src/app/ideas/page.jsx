@@ -1,6 +1,11 @@
 import IdeaCard from "@/components/IdeaCard";
 import IdeaFilters from "@/components/IdeaFilters";
 
+export const metadata = {
+  title: "IdeaVault | Ideas",
+  description: "Developed By Emon Hossain",
+};
+
 const IdeasPage = async ({ searchParams }) => {
   const resolvedSearchParams = await searchParams;
 

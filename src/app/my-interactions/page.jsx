@@ -1,5 +1,10 @@
 import MyInteractionsContent from "@/components/MyInteractionsContent";
 
+export const metadata = {
+  title: "IdeaVault | My Interactions",
+  description: "Developed By Emon Hossain",
+};
+
 
 const MyInteractionsPage = () => {
   return (
