@@ -128,7 +128,7 @@ const Navbar = () => {
                       <div className="flex items-center gap-2">
                         <Avatar size="sm">
                           <Avatar.Image alt={user?.name} src={user.image} />
-                          <Avatar.Fallback delayMs={600}>JD</Avatar.Fallback>
+                          <Avatar.Fallback delayMs={600}>EH</Avatar.Fallback>
                         </Avatar>
                         <div className="flex flex-col gap-0">
                           <p className="text-sm leading-5 font-medium">
