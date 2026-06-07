@@ -8,14 +8,23 @@ import {
 } from "lucide-react";
 
 import CommentSection from "@/components/CommentSection";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 
 const IdeaDetailsPage = async ({ params }) => {
   const { id } = await params;
+  const {token} = await auth.api.getToken({
+    headers: await headers()
+  })
+  console.log(token);
 
   const res = await fetch(
     `http://localhost:5000/idea/${id}`,
     {
       cache: "no-store",
+      headers: {
+        authorization: `Bearer ${token}`
+      }
     }
   );
 
