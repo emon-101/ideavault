@@ -13,9 +13,14 @@ const MyIdeasContent = () => {
 
   const fetchIdeas = async () => {
     if (!user?.id) return;
-
+    const {data: tokenData} = await authClient.token()
+    // console.log(tokenData);
     try {
-      const res = await fetch(`http://localhost:5000/my-ideas/${user.id}`);
+      const res = await fetch(`http://localhost:5000/my-ideas/${user.id}`, {
+        headers: {
+          authorization: `Bearer ${tokenData.token}`
+        }
+      });
 
       const data = await res.json();
 

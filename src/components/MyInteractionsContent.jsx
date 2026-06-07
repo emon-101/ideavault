@@ -17,9 +17,14 @@ const MyInteractionsContent = () => {
     if (!user?.id) return;
 
     const fetchComments = async () => {
+      const {data: tokenData} = await authClient.token()
       try {
         const res = await fetch(
-          `http://localhost:5000/my-interactions/${user.id}`,
+          `http://localhost:5000/my-interactions/${user.id}`, {
+            headers: {
+              authorization: `Bearer ${tokenData.token}`
+            }
+          }
         );
 
         const data = await res.json();
