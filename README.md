@@ -8,6 +8,10 @@
 
 A web-based platform for sharing startup ideas, discovering trends, and validating concepts through real community feedback.
 
+<p align="center">
+  <img src="https://i.ibb.co.com/tPXDCJfn/ideavault.png" alt="Skill Sphere" />
+</p
+
 [![Live Demo](https://img.shields.io/badge/🚀_Live_Demo-ideavault.vercel.app-6366f1?style=for-the-badge)](https://ideavault-fcaq.vercel.app/)
 [![Next.js](https://img.shields.io/badge/Next.js-15-000000?style=for-the-badge&logo=next.js)](https://nextjs.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)](LICENSE)
