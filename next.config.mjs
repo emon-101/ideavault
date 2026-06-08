@@ -10,8 +10,9 @@ const nextConfig = {
       }
     ]
   },
+  output: 'standalone',
   experimental: {
-    serverComponentsExternalPackages:['@better-auth/kysely-adapter'],
+    serverComponentsExternalPackages: ['@better-auth/kysely-adapter', 'kysely'],
   }
 };
 
