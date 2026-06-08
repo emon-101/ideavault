@@ -2,7 +2,7 @@ import IdeaCard from "./IdeaCard";
 
 const TrendingIdeas = async () => {
   const res = await fetch(
-    "http://localhost:5000/trending-ideas",
+    `${process.env.NEXT_PUBLIC_SERVER_URL}/trending-ideas`,
     {
       cache: "no-store",
     }

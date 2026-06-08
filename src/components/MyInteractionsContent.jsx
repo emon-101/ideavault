@@ -20,7 +20,7 @@ const MyInteractionsContent = () => {
       const {data: tokenData} = await authClient.token()
       try {
         const res = await fetch(
-          `http://localhost:5000/my-interactions/${user.id}`, {
+          `${process.env.NEXT_PUBLIC_SERVER_URL}/my-interactions/${user.id}`, {
             headers: {
               authorization: `Bearer ${tokenData.token}`
             }

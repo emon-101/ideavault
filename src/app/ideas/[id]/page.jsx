@@ -24,7 +24,7 @@ const IdeaDetailsPage = async ({ params }) => {
   // console.log(token);
 
   const res = await fetch(
-    `http://localhost:5000/idea/${id}`,
+    `${process.env.NEXT_PUBLIC_SERVER_URL}/idea/${id}`,
     {
       cache: "no-store",
       headers: {

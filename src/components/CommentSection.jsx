@@ -17,7 +17,7 @@ const CommentSection = ({ ideaId }) => {
   const loadComments = async () => {
     try {
       const res = await fetch(
-        `http://localhost:5000/comments/${ideaId}`
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/comments/${ideaId}`
       );
 
       const data = await res.json();
@@ -48,7 +48,7 @@ const CommentSection = ({ ideaId }) => {
       };
 
       const res = await fetch(
-        "http://localhost:5000/comments",
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/comments`,
         {
           method: "POST",
           headers: {
@@ -73,7 +73,7 @@ const CommentSection = ({ ideaId }) => {
   const handleDelete = async (commentId) => {
     try {
       await fetch(
-        `http://localhost:5000/comments/${commentId}`,
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/comments/${commentId}`,
         {
           method: "DELETE",
         }
@@ -97,7 +97,7 @@ const CommentSection = ({ ideaId }) => {
 
     try {
       await fetch(
-        `http://localhost:5000/comments/${editingId}`,
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/comments/${editingId}`,
         {
           method: "PATCH",
           headers: {

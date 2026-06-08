@@ -39,7 +39,7 @@ const EditIdeaModal = ({ idea, refetch }) => {
 
     try {
       const res = await fetch(
-        `http://localhost:5000/idea/${_id}`,
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/idea/${_id}`,
         {
           method: "PATCH",
           headers: {

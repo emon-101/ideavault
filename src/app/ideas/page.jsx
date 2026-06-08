@@ -24,7 +24,7 @@ const IdeasPage = async ({ searchParams }) => {
   }
 
   const res = await fetch(
-    `http://localhost:5000/idea?${params.toString()}`,
+    `${process.env.NEXT_PUBLIC_SERVER_URL}/idea?${params.toString()}`,
     {
       cache: "no-store",
     }

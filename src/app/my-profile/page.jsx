@@ -26,7 +26,7 @@ const MyProfilePage = () => {
     };
 
     try {
-      const res = await fetch(`http://localhost:5000/users/${user.id}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/users/${user.id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
